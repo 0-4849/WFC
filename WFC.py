@@ -125,3 +125,5 @@ char_list = [chars[i.options[0]] for i in grid]
 for i in range(0,len(char_list),SIZE_X+1): char_list.insert(i+SIZE_X, "\n")
 
 print(*char_list, sep="")
+
+#comment to test git commit
