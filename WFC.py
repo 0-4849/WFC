@@ -39,8 +39,17 @@ rules = {
 }
 
 
+class Tile():
+	def __init__(self, char, edges) -> None:
+		self.char = char
+		self.edges = edges
+		self.up = []
+		self.right = []
+		self.down = []
+		self.left = []
+
 class Cell():
-    def __init__(self, id):
+    def __init__(self, id) -> None:
         self.is_collapsed = False
         self.options = [LEFT, RIGHT, UP, DOWN, BLANK]
         self.id = id
