@@ -1,6 +1,6 @@
 import random
 
-chars = (" ", "┴", "├", "┬", "┤")
+chars = (" ", )
 
 SIZE_X, SIZE_Y = 20,10
 LEFT, RIGHT, UP, DOWN, BLANK = 4, 2, 1, 3, 0
@@ -39,7 +39,7 @@ rules = {
 }
 
 
-class Tile():
+class Cell():
     def __init__(self, id):
         self.is_collapsed = False
         self.options = [LEFT, RIGHT, UP, DOWN, BLANK]
@@ -49,7 +49,7 @@ class Tile():
         return len(self.options) < len(other.options)
 
 
-grid = [Tile(i) for i in range(SIZE_X*SIZE_Y)]
+grid = [Cell(i) for i in range(SIZE_X*SIZE_Y)]
 output = [" "]*SIZE_X*SIZE_Y
 
 while True:
