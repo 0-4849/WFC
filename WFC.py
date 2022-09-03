@@ -1,10 +1,5 @@
 import random
 
-chars = (" ", "┴", "├", "┬", "┤")
-
-SIZE_X, SIZE_Y = 20, 10
-LEFT, RIGHT, UP, DOWN, BLANK = 4, 2, 1, 3, 0
-
 class Tile():
 	def __init__(self, name, char, edges) -> None:
 		self.name = name		
@@ -24,7 +19,7 @@ class Cell():
 
 	def __lt__(self, other):
 		return len(self.options) < len(other.options)
-    
+
 tiles = [0]*5
 tiles[0] = Tile(0, " ", [0,0,0,0])
 tiles[1] = Tile(1, "┴", [1,1,0,1])
@@ -32,6 +27,9 @@ tiles[2] = Tile(2, "├", [1,1,1,0])
 tiles[3] = Tile(3, "┬", [0,1,1,1])
 tiles[4] = Tile(4, "┤", [1,0,1,1])
 
+chars = (" ", "┴", "├", "┬", "┤")
+SIZE_X, SIZE_Y = 20, 10
+BLANK, UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3, 4
 # calculate compatabilities for edges
 rules = {}
 
