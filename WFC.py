@@ -1,5 +1,5 @@
 import random
-#test
+
 class Tile():
 	def __init__(self, name, char, edges) -> None:
 		self.name = name		
@@ -19,6 +19,14 @@ class Cell():
 
 	def __lt__(self, other):
 		return len(self.options) < len(other.options)
+
+def check_options(cell, direction):
+	valid_options = set()
+	for option in cell.options:
+		valid = rules[option][direction]
+		valid_options = valid_options.union(valid)
+  
+	return valid_options
 
 tiles = [0]*5
 tiles[0] = Tile(0, " ", [0,0,0,0])
@@ -71,41 +79,21 @@ while True:
 				
 				if y > 0:  # check up
 					up = grid[(y-1)*SIZE_X + x]
-					valid_options = set()
-					for option in up.options:
-						valid = rules[option][2]
-						valid_options = valid_options.union(valid)
-					next_options = next_options & valid_options
+					next_options &= check_options(up, 2)
 
 				if x < SIZE_X - 1:  # check right
 					right = grid[y*SIZE_X + x + 1]
-					valid_options = set()
-					for option in right.options:
-						valid = rules[option][3]
-						valid_options = valid_options.union(valid)
-					next_options = next_options & valid_options
+					next_options &= check_options(right, 3)
 
 				if y < SIZE_Y - 1:  # check down
 					down = grid[(y+1)*SIZE_X + x]
-					valid_options = set()
-					for option in down.options:
-						valid = rules[option][0]
-						valid_options = valid_options.union(valid)
-					next_options = next_options & valid_options
+					next_options &= check_options(down, 0)
 
 				if x > 0:  # check left
 					left = grid[y*SIZE_X + x - 1]
-					valid_options = set()
-					for option in left.options:
-						valid = rules[option][1]
-						valid_options = valid_options.union(valid)
-					next_options = next_options & valid_options
+					next_options &= check_options(left, 1)
 						
-				
-
 				next_grid[index].options = next_options
-    
-    
     
 	grid = next_grid.copy()
 
