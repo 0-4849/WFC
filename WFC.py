@@ -1,24 +1,6 @@
 import random
-
-class Tile():
-	def __init__(self, name, char, edges) -> None:
-		self.name = name		
-		self.char = char
-		self.edges = edges
-  
-		self.up = []
-		self.right = []
-		self.down = []
-		self.left = []
-
-class Cell():
-	def __init__(self, id) -> None:
-		self.is_collapsed = False
-		self.options = {0,1,2,3,4}
-		self.id = id
-
-	def __lt__(self, other):
-		return len(self.options) < len(other.options)
+from tile import Tile
+from cell import Cell
 
 def check_options(cell, direction):
 	valid_options = set()
@@ -27,7 +9,7 @@ def check_options(cell, direction):
 		valid_options = valid_options.union(valid)
   
 	return valid_options
-
+# Make a tile list with all tiles in it (blank, up, right, down, left)
 tiles = [0]*5
 tiles[0] = Tile(0, " ", [0,0,0,0])
 tiles[1] = Tile(1, "┴", [1,1,0,1])
@@ -38,9 +20,9 @@ tiles[4] = Tile(4, "┤", [1,0,1,1])
 chars = (" ", "┴", "├", "┬", "┤")
 SIZE_X, SIZE_Y = 20, 10
 BLANK, UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3, 4
+
 # calculate compatabilities for edges
 rules = {}
-
 for i in tiles:
 	rules[i.name] = {}
 	for edge_index, edge in enumerate(i.edges):
@@ -49,7 +31,6 @@ for i in tiles:
 			if edge == j.edges[(edge_index + 2) % 4]:
 				rules[i.name][edge_index] |= {j.name}
 				
-
 grid = [Cell(i) for i in range(SIZE_X*SIZE_Y)]
 output = [" "]*SIZE_X*SIZE_Y
 
