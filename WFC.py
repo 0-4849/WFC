@@ -9,6 +9,7 @@ def check_options(cell, direction):
 		valid_options = valid_options.union(valid)
   
 	return valid_options
+
 # Make a tile list with all tiles in it (blank, up, right, down, left)
 tiles = [0]*5
 tiles[0] = Tile(0, " ", [0,0,0,0])
@@ -30,24 +31,28 @@ for i in tiles:
 		for j in tiles:
 			if edge == j.edges[(edge_index + 2) % 4]:
 				rules[i.name][edge_index] |= {j.name}
-				
+
+# Generate grid
 grid = [Cell(i) for i in range(SIZE_X*SIZE_Y)]
-output = [" "]*SIZE_X*SIZE_Y
 
 while True:
     
+    # copy grid, sort it by number of options (__lt__ method in cell class), then filter out collapsed cells
 	grid_copy = grid.copy()
-	grid_copy.sort()  # sort by number of options (__lt__ method)
+	grid_copy.sort()  
 	grid_copy = list(filter((lambda x: not x.is_collapsed), grid_copy))
 	if len(grid_copy) == 0: break
 
-	possible_tiles = [i for i in grid_copy if len(i.options) == len(grid_copy[0].options)] # pick random tile from all lowest values
+	# generate list with the cells that have the least options
+	possible_tiles = [i for i in grid_copy if len(i.options) == len(grid_copy[0].options)] 
 
+	# pick one from the list, collapse it, pick one of its options
 	current_tile = random.choice(possible_tiles)
 	current_tile.is_collapsed = True
 	random_key = random.choice(list(current_tile.options))
-	current_tile.options = set([random_key])
+	current_tile.options = {random_key}
 
+	# make a copy of the grid so all cells can be evaluated 
 	next_grid = grid.copy()
 
 	for y in range(SIZE_Y):
@@ -76,9 +81,11 @@ while True:
 						
 				next_grid[index].options = next_options
     
+    # transfer the edited board to grid
 	grid = next_grid.copy()
 
-char_list = [chars[list(i.options)[0]] for i in grid]
+# generate a list of characters based on the left over options of the cells
+char_list = [chars[i.options.pop()] for i in grid]
 
 for i in range(0,len(char_list),SIZE_X+1): char_list.insert(i+SIZE_X, "\n")
 
