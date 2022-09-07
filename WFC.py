@@ -19,7 +19,7 @@ tiles[3] = Tile(3, "┬", [0,1,1,1])
 tiles[4] = Tile(4, "┤", [1,0,1,1])
 
 chars = (" ", "┴", "├", "┬", "┤")
-SIZE_X, SIZE_Y = 20, 10
+SIZE_X, SIZE_Y = 2,2
 BLANK, UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3, 4
 
 # calculate compatabilities for edges
@@ -32,7 +32,7 @@ for i in tiles:
 			if edge == j.edges[(edge_index + 2) % 4]:
 				rules[i.name][edge_index] |= {j.name}
 
-# Generate grid
+# generate grid
 grid = [Cell(i) for i in range(SIZE_X*SIZE_Y)]
 
 while True:
@@ -44,42 +44,45 @@ while True:
 	if len(grid_copy) == 0: break
 
 	# generate list with the cells that have the least options
-	possible_tiles = [i for i in grid_copy if len(i.options) == len(grid_copy[0].options)] 
+	possible_cells = [i for i in grid_copy if len(i.options) == len(grid_copy[0].options)] 
 
 	# pick one from the list, collapse it, pick one of its options
-	current_tile = random.choice(possible_tiles)
-	current_tile.is_collapsed = True
-	random_key = random.choice(list(current_tile.options))
-	current_tile.options = {random_key}
-
+	index = random.randrange(len(possible_cells))
+	current_cell = possible_cells[index]
+	current_cell.is_collapsed = True
+	random_key = random.choice(list(current_cell.options))
+	current_cell.options = {random_key}
+ 
 	# make a copy of the grid so all cells can be evaluated 
 	next_grid = grid.copy()
 
-	for y in range(SIZE_Y):
-		for x in range(SIZE_X):
-			index = y*SIZE_X + x
-			if grid[index].is_collapsed:
-				next_grid[index] = grid[index]
-			else:
-				next_options = {0,1,2,3,4}
+	x = index % SIZE_X
+	y = index // SIZE_X
+
+	### TODO: check cells around current_cell, NOT current_cell itself
+ 
+	if grid[index].is_collapsed:
+		next_grid[index] = grid[index]
+	else:
+		next_options = {0,1,2,3,4}
+		
+		if y > 0:  # check up
+			up = grid[(y-1)*SIZE_X + x]
+			next_options &= check_options(up, 2)
+
+		if x < SIZE_X - 1:  # check right
+			right = grid[y*SIZE_X + x + 1]
+			next_options &= check_options(right, 3)
+
+		if y < SIZE_Y - 1:  # check down
+			down = grid[(y+1)*SIZE_X + x]
+			next_options &= check_options(down, 0)
+
+		if x > 0:  # check left
+			left = grid[y*SIZE_X + x - 1]
+			next_options &= check_options(left, 1)
 				
-				if y > 0:  # check up
-					up = grid[(y-1)*SIZE_X + x]
-					next_options &= check_options(up, 2)
-
-				if x < SIZE_X - 1:  # check right
-					right = grid[y*SIZE_X + x + 1]
-					next_options &= check_options(right, 3)
-
-				if y < SIZE_Y - 1:  # check down
-					down = grid[(y+1)*SIZE_X + x]
-					next_options &= check_options(down, 0)
-
-				if x > 0:  # check left
-					left = grid[y*SIZE_X + x - 1]
-					next_options &= check_options(left, 1)
-						
-				next_grid[index].options = next_options
+		next_grid[index].options = next_options
     
     # transfer the edited board to grid
 	grid = next_grid.copy()
