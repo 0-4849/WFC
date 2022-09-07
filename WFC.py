@@ -1,7 +1,7 @@
 import random
 from tile import Tile
 from cell import Cell
-
+#test
 def check_options(cell, direction):
 	valid_options = set()
 	for option in cell.options:
