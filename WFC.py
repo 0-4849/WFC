@@ -56,33 +56,30 @@ while True:
 	# make a copy of the grid so all cells can be evaluated 
 	next_grid = grid.copy()
 
-	x = index % SIZE_X
-	y = index // SIZE_X
+	x = current_cell.id % SIZE_X
+	y = current_cell.id // SIZE_X
 
-	### TODO: check cells around current_cell, NOT current_cell itself
+	### TODO: check cells around current_cell, NOT current_cell itself!!
  
-	if grid[index].is_collapsed:
-		next_grid[index] = grid[index]
-	else:
-		next_options = {0,1,2,3,4}
-		
-		if y > 0:  # check up
-			up = grid[(y-1)*SIZE_X + x]
-			next_options &= check_options(up, 2)
+	next_options = {0,1,2,3,4}
+	
+	if y > 0:  # check up
+		up = grid[(y-1)*SIZE_X + x]
+		next_options &= check_options(up, 2)
 
-		if x < SIZE_X - 1:  # check right
-			right = grid[y*SIZE_X + x + 1]
-			next_options &= check_options(right, 3)
+	if x < SIZE_X - 1:  # check right
+		right = grid[y*SIZE_X + x + 1]
+		next_options &= check_options(right, 3)
 
-		if y < SIZE_Y - 1:  # check down
-			down = grid[(y+1)*SIZE_X + x]
-			next_options &= check_options(down, 0)
+	if y < SIZE_Y - 1:  # check down
+		down = grid[(y+1)*SIZE_X + x]
+		next_options &= check_options(down, 0)
 
-		if x > 0:  # check left
-			left = grid[y*SIZE_X + x - 1]
-			next_options &= check_options(left, 1)
-				
-		next_grid[index].options = next_options
+	if x > 0:  # check left
+		left = grid[y*SIZE_X + x - 1]
+		next_options &= check_options(left, 1)
+			
+	next_grid[index].options = next_options
     
     # transfer the edited board to grid
 	grid = next_grid.copy()
